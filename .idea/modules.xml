@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/WidgetApplication.iml" filepath="$PROJECT_DIR$/.idea/modules/WidgetApplication.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/libs_ui_widget/libs_ui_widget.iml" filepath="$PROJECT_DIR$/.idea/modules/libs_ui_widget/libs_ui_widget.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/widgetDemo/widgetDemo.iml" filepath="$PROJECT_DIR$/.idea/modules/widgetDemo/widgetDemo.iml" />
+    </modules>
+  </component>
+</project>
