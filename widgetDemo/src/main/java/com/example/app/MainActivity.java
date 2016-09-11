@@ -36,7 +36,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.btn_path_demo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                startActivity(new Intent(context,PathDemoActivity.class));
+                startActivity(new Intent(context,RecyclerViewActivity.class));
+            }
+        });
 
     }
-
 }
+
+

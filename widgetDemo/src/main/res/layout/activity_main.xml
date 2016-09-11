@@ -26,4 +26,10 @@
             android:layout_width="match_parent"
             android:text="auto_ad"
             android:layout_height="wrap_content"/>
+    <Button
+            android:layout_below="@id/btn_auto_play_ad"
+            android:id="@+id/btn_path_demo"
+            android:layout_width="match_parent"
+            android:text="Path_Demo"
+            android:layout_height="wrap_content"/>
 </RelativeLayout>

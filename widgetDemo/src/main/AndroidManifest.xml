@@ -18,5 +18,6 @@
         <activity android:name=".AutoTextActivity"/>
         <activity android:name=".LoadMoreActivity"/>
         <activity android:name=".AutoPlayAdActivity"/>
+        <activity android:name=".RecyclerViewActivity"/>
     </application>
 </manifest>
