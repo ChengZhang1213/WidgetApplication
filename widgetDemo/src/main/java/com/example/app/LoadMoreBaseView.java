@@ -23,7 +23,7 @@ import java.util.Date;
  */
 public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLayout {
 
-    protected T mRecyclerView;
+    protected T recyclerView;
     // pull state
     private static final int PULL_UP_STATE = 0;
     private static final int PULL_DOWN_STATE = 1;
@@ -34,83 +34,83 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
     /**
      * last y
      */
-    private int mLastMotionY;
+    private int lastMotionY;
     /**
      * header view
      */
-    private View mHeaderView;
+    private View headerView;
     /**
      * footer view
      */
-    private View mFooterView;
+    private View footerView;
     /**
      * header view height
      */
-    private int mHeaderViewHeight;
+    private int headerViewHeight;
     /**
      * footer view height
      */
-    private int mFooterViewHeight;
+    private int footerViewHeight;
     /**
      * header view image
      */
-    private ImageView mHeaderImageView;
+    private ImageView headerImageView;
     /**
      * footer view image
      */
-    private ImageView mFooterImageView;
+    private ImageView footerImageView;
     /**
      * header tip text
      */
-    private TextView mHeaderTextView;
+    private TextView headerTextView;
     /**
      * footer tip text
      */
-    private TextView mFooterTextView;
+    private TextView footerTextView;
     /**
      * header refresh time
      */
-    private TextView mHeaderUpdateTextView;
+    private TextView headerUpdateTextView;
     /**
      * header progress bar
      */
-    private ProgressBar mHeaderProgressBar;
+    private ProgressBar headerProgressBar;
     /**
      * footer progress bar
      */
-    private ProgressBar mFooterProgressBar;
+    private ProgressBar footerProgressBar;
     /**
      * layout inflater
      */
-    private LayoutInflater mInflater;
+    private LayoutInflater layoutInflater;
     /**
      * header view current state
      */
-    private int mHeaderState;
+    private int headerState;
     /**
      * footer view current state
      */
-    private int mFooterState;
+    private int footerState;
     /**
      * pull state,pull up or pull down;PULL_UP_STATE or PULL_DOWN_STATE
      */
-    private int mPullState;
+    private int pullState;
     /**
      * 变为向下的箭头,改变箭头方向
      */
-    private RotateAnimation mFlipAnimation;
+    private RotateAnimation flipAnimation;
     /**
      * 变为逆向的箭头,旋转
      */
-    private RotateAnimation mReverseFlipAnimation;
+    private RotateAnimation reverseFlipAnimation;
     /**
      * footer refresh listener
      */
-    private OnFooterRefreshListener mOnFooterRefreshListener;
+    private OnFooterRefreshListener onFooterRefreshListener;
     /**
      * footer refresh listener
      */
-    private OnHeaderRefreshListener mOnHeaderRefreshListener;
+    private OnHeaderRefreshListener onHeaderRefreshListener;
 
     public LoadMoreBaseView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -127,40 +127,40 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
      */
     private void init(Context context, AttributeSet attrs) {
         // Load all of the animations we need in code rather than through XML
-        mFlipAnimation = new RotateAnimation(0, -180, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
-        mFlipAnimation.setInterpolator(new LinearInterpolator());
-        mFlipAnimation.setDuration(250);
-        mFlipAnimation.setFillAfter(true);
-        mReverseFlipAnimation = new RotateAnimation(-180, 0, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
-        mReverseFlipAnimation.setInterpolator(new LinearInterpolator());
-        mReverseFlipAnimation.setDuration(250);
-        mReverseFlipAnimation.setFillAfter(true);
+        flipAnimation = new RotateAnimation(0, -180, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+        flipAnimation.setInterpolator(new LinearInterpolator());
+        flipAnimation.setDuration(250);
+        flipAnimation.setFillAfter(true);
+        reverseFlipAnimation = new RotateAnimation(-180, 0, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+        reverseFlipAnimation.setInterpolator(new LinearInterpolator());
+        reverseFlipAnimation.setDuration(250);
+        reverseFlipAnimation.setFillAfter(true);
 
-        mInflater = LayoutInflater.from(getContext());
+        layoutInflater = LayoutInflater.from(getContext());
         // header view 在此添加,保证是第一个添加到linearlayout的最上端
         addHeaderView();
-        mRecyclerView = createRecyclerView(context, attrs);
-        mRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        addView(mRecyclerView);
+        recyclerView = createRecyclerView(context, attrs);
+        recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        addView(recyclerView);
     }
 
     private void addHeaderView() {
         // header view
-        mHeaderView = mInflater.inflate(R.layout.refresh_header, this, false);
+        headerView = layoutInflater.inflate(R.layout.refresh_header, this, false);
 
-        mHeaderImageView = (ImageView) mHeaderView.findViewById(R.id.pull_to_refresh_image);
-        mHeaderTextView = (TextView) mHeaderView.findViewById(R.id.pull_to_refresh_text);
-        mHeaderUpdateTextView = (TextView) mHeaderView.findViewById(R.id.pull_to_refresh_updated_at);
-        mHeaderProgressBar = (ProgressBar) mHeaderView.findViewById(R.id.pull_to_refresh_progress);
-        mHeaderUpdateTextView.setText("最近更新:" + getFormatDateString("MM-dd HH:mm"));
+        headerImageView = (ImageView) headerView.findViewById(R.id.pull_to_refresh_image);
+        headerTextView = (TextView) headerView.findViewById(R.id.pull_to_refresh_text);
+        headerUpdateTextView = (TextView) headerView.findViewById(R.id.pull_to_refresh_updated_at);
+        headerProgressBar = (ProgressBar) headerView.findViewById(R.id.pull_to_refresh_progress);
+        headerUpdateTextView.setText("最近更新:" + getFormatDateString("MM-dd HH:mm"));
         // header layout
-        measureView(mHeaderView);
-        mHeaderViewHeight = mHeaderView.getMeasuredHeight();
-        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, mHeaderViewHeight);
+        measureView(headerView);
+        headerViewHeight = headerView.getMeasuredHeight();
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, headerViewHeight);
         // 设置topMargin的值为负的header View高度,即将其隐藏在最上方
-        params.topMargin = -(mHeaderViewHeight);
-        // mHeaderView.setLayoutParams(params1);
-        addView(mHeaderView, params);
+        params.topMargin = -(headerViewHeight);
+        // headerView.setLayoutParams(params1);
+        addView(headerView, params);
 
     }
 
@@ -171,14 +171,14 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
 
     private void addFooterView() {
         // footer view
-        mFooterView = mInflater.inflate(R.layout.refresh_footer, this, false);
-        mFooterImageView = (ImageView) mFooterView.findViewById(R.id.pull_to_load_image);
-        mFooterTextView = (TextView) mFooterView.findViewById(R.id.pull_to_load_text);
-        mFooterProgressBar = (ProgressBar) mFooterView.findViewById(R.id.pull_to_load_progress);
-        measureView(mFooterView);
-        mFooterViewHeight = mFooterView.getMeasuredHeight();
-        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, mFooterViewHeight);
-        addView(mFooterView, params);
+        footerView = layoutInflater.inflate(R.layout.refresh_footer, this, false);
+        footerImageView = (ImageView) footerView.findViewById(R.id.pull_to_load_image);
+        footerTextView = (TextView) footerView.findViewById(R.id.pull_to_load_text);
+        footerProgressBar = (ProgressBar) footerView.findViewById(R.id.pull_to_load_progress);
+        measureView(footerView);
+        footerViewHeight = footerView.getMeasuredHeight();
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, footerViewHeight);
+        addView(footerView, params);
     }
 
     @Override
@@ -191,7 +191,7 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
     public boolean dispatchTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_MOVE://刷新时禁止滑动
-                if (mHeaderState == REFRESHING || mFooterState == REFRESHING) {
+                if (headerState == REFRESHING || footerState == REFRESHING) {
                     return true;
                 }
                 break;
@@ -206,11 +206,11 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 // 首先拦截down事件,记录y坐标
-                mLastMotionY = y;
+                lastMotionY = y;
                 break;
             case MotionEvent.ACTION_MOVE:
                 // deltaY > 0 是向下运动,< 0是向上运动
-                int deltaY = y - mLastMotionY;
+                int deltaY = y - lastMotionY;
                 if (isRefreshViewScroll(deltaY)) {
                     return true;
                 }
@@ -232,35 +232,35 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 // onInterceptTouchEvent已经记录
-                // mLastMotionY = y;
+                // lastMotionY = y;
                 break;
             case MotionEvent.ACTION_MOVE:
-                int deltaY = y - mLastMotionY;
-                if (mPullState == PULL_DOWN_STATE) {
+                int deltaY = y - lastMotionY;
+                if (pullState == PULL_DOWN_STATE) {
                     headerPrepareToRefresh(deltaY);
-                } else if (mPullState == PULL_UP_STATE) {
+                } else if (pullState == PULL_UP_STATE) {
                     footerPrepareToRefresh(deltaY);
                 }
-                mLastMotionY = y;
+                lastMotionY = y;
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 int topMargin = getHeaderTopMargin();
-                if (mPullState == PULL_DOWN_STATE) {
+                if (pullState == PULL_DOWN_STATE) {
                     if (topMargin >= 0) {
                         // 开始刷新
                         headerRefreshing();
                     } else {
                         // 还没有执行刷新，重新隐藏
-                        setHeaderTopMargin(-mHeaderViewHeight);
+                        setHeaderTopMargin(-headerViewHeight);
                     }
-                } else if (mPullState == PULL_UP_STATE) {
-                    if (Math.abs(topMargin) >= mHeaderViewHeight + mFooterViewHeight) {
+                } else if (pullState == PULL_UP_STATE) {
+                    if (Math.abs(topMargin) >= headerViewHeight + footerViewHeight) {
                         // 开始执行footer 刷新
                         footerRefreshing();
                     } else {
                         // 还没有执行刷新，重新隐藏
-                        setHeaderTopMargin(-mHeaderViewHeight);
+                        setHeaderTopMargin(-headerViewHeight);
                     }
                 }
                 break;
@@ -275,33 +275,33 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
      * @return
      */
     private boolean isRefreshViewScroll(int deltaY) {
-        if (mHeaderState == REFRESHING || mFooterState == REFRESHING) {
+        if (headerState == REFRESHING || footerState == REFRESHING) {
             return false;
         }
         if (deltaY >= -20 && deltaY <= 20)
             return false;
 
-        if (mRecyclerView != null) {
+        if (recyclerView != null) {
             // 子view(ListView or GridView)滑动到最顶端
             if (deltaY > 0) {
-                View child = mRecyclerView.getChildAt(0);
+                View child = recyclerView.getChildAt(0);
                 if (child == null) {
                     // 如果mRecyclerView中没有数据,不拦截
                     return false;
                 }
                 if (isScrollTop() && child.getTop() == 0) {
-                    mPullState = PULL_DOWN_STATE;
+                    pullState = PULL_DOWN_STATE;
                     return true;
                 }
                 int top = child.getTop();
-                int padding = mRecyclerView.getPaddingTop();
+                int padding = recyclerView.getPaddingTop();
                 if (isScrollTop() && Math.abs(top - padding) <= 8) {// 这里之前用3可以判断,但现在不行,还没找到原因
-                    mPullState = PULL_DOWN_STATE;
+                    pullState = PULL_DOWN_STATE;
                     return true;
                 }
 
             } else if (deltaY < 0) {
-                View lastChild = mRecyclerView.getChildAt(mRecyclerView.getChildCount() - 1);
+                View lastChild = recyclerView.getChildAt(recyclerView.getChildCount() - 1);
                 if (lastChild == null) {
                     // 如果mRecyclerView中没有数据,不拦截
                     return false;
@@ -309,7 +309,7 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
                 // 最后一个子view的Bottom小于父View的高度说明mRecyclerView的数据没有填满父view,
                 // 等于父View的高度说明mRecyclerView已经滑动到最后
                 if (lastChild.getBottom() <= getHeight() && isScrollBottom()) {
-                    mPullState = PULL_UP_STATE;
+                    pullState = PULL_UP_STATE;
                     return true;
                 }
             }
@@ -323,7 +323,7 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
      * @return
      */
     boolean isScrollTop() {
-        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         if (linearLayoutManager.findFirstVisibleItemPosition() == 0) {
             return true;
         } else {
@@ -337,8 +337,8 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
      * @return
      */
     boolean isScrollBottom() {
-        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-        if (linearLayoutManager.findLastVisibleItemPosition() == (mRecyclerView.getAdapter().getItemCount() - 1)) {
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        if (linearLayoutManager.findLastVisibleItemPosition() == (recyclerView.getAdapter().getItemCount() - 1)) {
             return true;
         } else {
             return false;
@@ -353,18 +353,18 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
     private void headerPrepareToRefresh(int deltaY) {
         int newTopMargin = changingHeaderViewTopMargin(deltaY);
         // 当header view的topMargin>=0时，说明已经完全显示出来了,修改header view 的提示状态
-        if (newTopMargin >= 0 && mHeaderState != RELEASE_TO_REFRESH) {
-            mHeaderTextView.setText(R.string.pull_to_refresh_release_label);
-            mHeaderUpdateTextView.setVisibility(View.VISIBLE);
-            mHeaderImageView.clearAnimation();
-            mHeaderImageView.startAnimation(mFlipAnimation);
-            mHeaderState = RELEASE_TO_REFRESH;
-        } else if (newTopMargin < 0 && newTopMargin > -mHeaderViewHeight) {// 拖动时没有释放
-            mHeaderImageView.clearAnimation();
-            mHeaderImageView.startAnimation(mFlipAnimation);
-            // mHeaderImageView.
-            mHeaderTextView.setText(R.string.pull_to_refresh_pull_label);
-            mHeaderState = PULL_TO_REFRESH;
+        if (newTopMargin >= 0 && headerState != RELEASE_TO_REFRESH) {
+            headerTextView.setText(R.string.pull_to_refresh_release_label);
+            headerUpdateTextView.setVisibility(View.VISIBLE);
+            headerImageView.clearAnimation();
+            headerImageView.startAnimation(flipAnimation);
+            headerState = RELEASE_TO_REFRESH;
+        } else if (newTopMargin < 0 && newTopMargin > -headerViewHeight) {// 拖动时没有释放
+            headerImageView.clearAnimation();
+            headerImageView.startAnimation(flipAnimation);
+            // headerImageView.
+            headerTextView.setText(R.string.pull_to_refresh_pull_label);
+            headerState = PULL_TO_REFRESH;
         }
     }
 
@@ -378,16 +378,16 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
         int newTopMargin = changingHeaderViewTopMargin(deltaY);
         // 如果header view topMargin 的绝对值大于或等于header + footer 的高度
         // 说明footer view 完全显示出来了，修改footer view 的提示状态
-        if (Math.abs(newTopMargin) >= (mHeaderViewHeight + mFooterViewHeight) && mFooterState != RELEASE_TO_REFRESH) {
-            mFooterTextView.setText(R.string.pull_to_refresh_footer_release_label);
-            mFooterImageView.clearAnimation();
-            mFooterImageView.startAnimation(mFlipAnimation);
-            mFooterState = RELEASE_TO_REFRESH;
-        } else if (Math.abs(newTopMargin) < (mHeaderViewHeight + mFooterViewHeight)) {
-            mFooterImageView.clearAnimation();
-            mFooterImageView.startAnimation(mFlipAnimation);
-            mFooterTextView.setText(R.string.pull_to_refresh_footer_pull_label);
-            mFooterState = PULL_TO_REFRESH;
+        if (Math.abs(newTopMargin) >= (headerViewHeight + footerViewHeight) && footerState != RELEASE_TO_REFRESH) {
+            footerTextView.setText(R.string.pull_to_refresh_footer_release_label);
+            footerImageView.clearAnimation();
+            footerImageView.startAnimation(flipAnimation);
+            footerState = RELEASE_TO_REFRESH;
+        } else if (Math.abs(newTopMargin) < (headerViewHeight + footerViewHeight)) {
+            footerImageView.clearAnimation();
+            footerImageView.startAnimation(flipAnimation);
+            footerTextView.setText(R.string.pull_to_refresh_footer_pull_label);
+            footerState = PULL_TO_REFRESH;
         }
     }
 
@@ -398,19 +398,19 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
      * @description
      */
     private int changingHeaderViewTopMargin(int deltaY) {
-        LayoutParams params = (LayoutParams) mHeaderView.getLayoutParams();
+        LayoutParams params = (LayoutParams) headerView.getLayoutParams();
         float newTopMargin = params.topMargin + deltaY * 0.3f;
         // 这里对上拉做一下限制,因为当前上拉后然后不释放手指直接下拉,会把下拉刷新给触发了,感谢网友yufengzungzhe的指出
         // 表示如果是在上拉后一段距离,然后直接下拉
-        if (deltaY > 0 && mPullState == PULL_UP_STATE && Math.abs(params.topMargin) <= mHeaderViewHeight) {
+        if (deltaY > 0 && pullState == PULL_UP_STATE && Math.abs(params.topMargin) <= headerViewHeight) {
             return params.topMargin;
         }
         // 同样地,对下拉做一下限制,避免出现跟上拉操作时一样的bug
-        if (deltaY < 0 && mPullState == PULL_DOWN_STATE && Math.abs(params.topMargin) >= mHeaderViewHeight) {
+        if (deltaY < 0 && pullState == PULL_DOWN_STATE && Math.abs(params.topMargin) >= headerViewHeight) {
             return params.topMargin;
         }
         params.topMargin = (int) newTopMargin;
-        mHeaderView.setLayoutParams(params);
+        headerView.setLayoutParams(params);
         invalidate();
         return params.topMargin;
     }
@@ -419,15 +419,15 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
      * header refreshing
      */
     public void headerRefreshing() {
-        mHeaderState = REFRESHING;
+        headerState = REFRESHING;
         setHeaderTopMargin(0);
-        mHeaderImageView.setVisibility(View.GONE);
-        mHeaderImageView.clearAnimation();
-        mHeaderImageView.setImageDrawable(null);
-        mHeaderProgressBar.setVisibility(View.VISIBLE);
-        mHeaderTextView.setText(R.string.pull_to_refresh_refreshing_label);
-        if (mOnHeaderRefreshListener != null) {
-            mOnHeaderRefreshListener.onHeaderRefresh(this);
+        headerImageView.setVisibility(View.GONE);
+        headerImageView.clearAnimation();
+        headerImageView.setImageDrawable(null);
+        headerProgressBar.setVisibility(View.VISIBLE);
+        headerTextView.setText(R.string.pull_to_refresh_refreshing_label);
+        if (onHeaderRefreshListener != null) {
+            onHeaderRefreshListener.onHeaderRefresh(this);
         }
     }
 
@@ -435,16 +435,16 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
      * footer refreshing
      */
     private void footerRefreshing() {
-        mFooterState = REFRESHING;
-        int top = mHeaderViewHeight + mFooterViewHeight;
+        footerState = REFRESHING;
+        int top = headerViewHeight + footerViewHeight;
         setHeaderTopMargin(-top);
-        mFooterImageView.setVisibility(View.GONE);
-        mFooterImageView.clearAnimation();
-        mFooterImageView.setImageDrawable(null);
-        mFooterTextView.setText(R.string.pull_to_refresh_footer_refreshing_label);
-        mFooterProgressBar.setVisibility(View.VISIBLE);
-        if (mOnFooterRefreshListener != null) {
-            mOnFooterRefreshListener.onFooterRefresh(this);
+        footerImageView.setVisibility(View.GONE);
+        footerImageView.clearAnimation();
+        footerImageView.setImageDrawable(null);
+        footerTextView.setText(R.string.pull_to_refresh_footer_refreshing_label);
+        footerProgressBar.setVisibility(View.VISIBLE);
+        if (onFooterRefreshListener != null) {
+            onFooterRefreshListener.onFooterRefresh(this);
         }
     }
 
@@ -455,9 +455,9 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
      * @description
      */
     private void setHeaderTopMargin(int topMargin) {
-        LayoutParams params = (LayoutParams) mHeaderView.getLayoutParams();
+        LayoutParams params = (LayoutParams) headerView.getLayoutParams();
         params.topMargin = topMargin;
-        mHeaderView.setLayoutParams(params);
+        headerView.setLayoutParams(params);
         invalidate();
     }
 
@@ -465,27 +465,27 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
      * header view 完成更新后恢复初始状态
      */
     public void onHeaderRefreshComplete() {
-        setHeaderTopMargin(-mHeaderViewHeight);
-        mHeaderImageView.setVisibility(View.VISIBLE);
-        mHeaderImageView.setImageResource(R.mipmap.ic_pulltorefresh_arrow);
-        mHeaderTextView.setText(R.string.pull_to_refresh_pull_label);
-        mHeaderUpdateTextView.setText("最近更新：" + getFormatDateString("MM-dd HH:mm"));
-        mHeaderProgressBar.setVisibility(View.GONE);
-        mHeaderState = PULL_TO_REFRESH;
+        setHeaderTopMargin(-headerViewHeight);
+        headerImageView.setVisibility(View.VISIBLE);
+        headerImageView.setImageResource(R.mipmap.ic_pulltorefresh_arrow);
+        headerTextView.setText(R.string.pull_to_refresh_pull_label);
+        headerUpdateTextView.setText("最近更新：" + getFormatDateString("MM-dd HH:mm"));
+        headerProgressBar.setVisibility(View.GONE);
+        headerState = PULL_TO_REFRESH;
     }
 
     /**
      * footer view 完成更新后恢复初始状态
      */
     public void onFooterRefreshComplete() {
-        setHeaderTopMargin(-mHeaderViewHeight);
-        mFooterImageView.setVisibility(View.GONE);
-        mFooterImageView.setImageResource(R.mipmap.ic_pulltorefresh_arrow_up);
-        mFooterTextView.setText(R.string.pull_to_refresh_footer_pull_label);
-        mFooterProgressBar.setVisibility(View.GONE);
-        mFooterState = PULL_TO_REFRESH;
-        if (mRecyclerView != null) {
-            mRecyclerView.scrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
+        setHeaderTopMargin(-headerViewHeight);
+        footerImageView.setVisibility(View.GONE);
+        footerImageView.setImageResource(R.mipmap.ic_pulltorefresh_arrow_up);
+        footerTextView.setText(R.string.pull_to_refresh_footer_pull_label);
+        footerProgressBar.setVisibility(View.GONE);
+        footerState = PULL_TO_REFRESH;
+        if (recyclerView != null) {
+            recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
         }
 
     }
@@ -496,7 +496,7 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
      * @description
      */
     private int getHeaderTopMargin() {
-        LayoutParams params = (LayoutParams) mHeaderView.getLayoutParams();
+        LayoutParams params = (LayoutParams) headerView.getLayoutParams();
         return params.topMargin;
     }
 
@@ -507,11 +507,11 @@ public abstract class LoadMoreBaseView <T extends RecyclerView> extends LinearLa
      * @description
      */
     public void setOnHeaderRefreshListener(OnHeaderRefreshListener headerRefreshListener) {
-        mOnHeaderRefreshListener = headerRefreshListener;
+        onHeaderRefreshListener = headerRefreshListener;
     }
 
     public void setOnFooterRefreshListener(OnFooterRefreshListener footerRefreshListener) {
-        mOnFooterRefreshListener = footerRefreshListener;
+        onFooterRefreshListener = footerRefreshListener;
     }
 
     /**
